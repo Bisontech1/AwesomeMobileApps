@@ -50,7 +50,7 @@ class _AddNotesScreenState extends State<AddNotesScreen> {
                   dateCreated: dateCreated,
                 ));
               },
-              child: Text("Agregar Nota"),
+              child: const Text("Agregar Nota"),
             )
           ],
         ),

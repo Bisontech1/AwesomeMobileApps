@@ -55,7 +55,7 @@ class _UpdateNotesScreenState extends State<UpdateNotesScreen> {
               onPressed: () {
                 widget.onNoteUpdated(note);
               },
-              child: Text("Actualizar Nota"),
+              child: const Text("Actualizar Nota"),
             )
           ],
         ),

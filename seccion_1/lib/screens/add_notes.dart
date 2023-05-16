@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:seccion_1/models/notes.dart';
 
 class AddNotesScreen extends StatefulWidget {
-  final Function(String value) onNoteAdded;
+  final Function(Note note) onNoteAdded;
 
   const AddNotesScreen({
     super.key,
@@ -13,8 +14,7 @@ class AddNotesScreen extends StatefulWidget {
 }
 
 class _AddNotesScreenState extends State<AddNotesScreen> {
-
-  String? note;
+  String? value;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class _AddNotesScreenState extends State<AddNotesScreen> {
                 hintText: "Nota",
               ),
               onChanged: (value) {
-                note = value;
+                this.value = value;
               },
             ),
             const SizedBox(
@@ -42,8 +42,13 @@ class _AddNotesScreenState extends State<AddNotesScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                if(note == null) return;
-                widget.onNoteAdded(note!);
+                if (value == null) return;
+                final dateCreated = DateTime.now();
+                widget.onNoteAdded(Note(
+                  id: dateCreated.millisecondsSinceEpoch.toString(),
+                  value: value!,
+                  dateCreated: dateCreated,
+                ));
               },
               child: Text("Agregar Nota"),
             )

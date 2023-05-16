@@ -3,6 +3,7 @@ import 'package:seccion_2/di/container.dart';
 import 'package:seccion_2/models/notes.dart';
 import 'package:seccion_2/repositories/notes_repository.dart';
 import 'package:seccion_2/screens/add_notes.dart';
+import 'package:seccion_2/screens/update_notes.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
@@ -12,13 +13,20 @@ class NotesScreen extends StatefulWidget {
 }
 
 class _NotesScreenState extends State<NotesScreen> {
+  var isLoading = true;
   final NotesRepository notesRepository = DIContainer.instance.notesRepository;
   List<Note> notes = [];
 
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  init() async {
+    await notesRepository.init();
     getNotes();
+    isLoading = false;
   }
 
   getNotes() {
@@ -27,15 +35,13 @@ class _NotesScreenState extends State<NotesScreen> {
     });
   }
 
-  addNote(String value) {
-    var note = Note(
-      dateCreated: DateTime.now(),
-      value: value,
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
-    );
-
+  addNote(Note note) {
     notesRepository.add(note);
+    getNotes();
+  }
 
+  updateNote(Note note) {
+    notesRepository.update(note);
     getNotes();
   }
 
@@ -53,6 +59,12 @@ class _NotesScreenState extends State<NotesScreen> {
       ),
       body: Builder(
         builder: (context) {
+          if (isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
           if (notes.isEmpty) {
             return const Center(
               child: Column(
@@ -81,6 +93,20 @@ class _NotesScreenState extends State<NotesScreen> {
                   removeNote(item);
                 },
                 child: ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdateNotesScreen(
+                          note: item,
+                          onNoteUpdated: (note) {
+                            updateNote(note);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
+                  },
                   leading: const Icon(Icons.note_alt_outlined),
                   title: Text(item.value),
                   subtitle: Text(
@@ -97,8 +123,8 @@ class _NotesScreenState extends State<NotesScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => AddNotesScreen(
-                onNoteAdded: (value) {
-                  addNote(value);
+                onNoteAdded: (note) {
+                  addNote(note);
                   Navigator.pop(context);
                 },
               ),

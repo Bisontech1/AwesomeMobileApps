@@ -3,6 +3,7 @@ import 'package:seccion_1/di/container.dart';
 import 'package:seccion_1/models/notes.dart';
 import 'package:seccion_1/repositories/notes_repository.dart';
 import 'package:seccion_1/screens/add_notes.dart';
+import 'package:seccion_1/screens/update_notes.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
@@ -27,15 +28,13 @@ class _NotesScreenState extends State<NotesScreen> {
     });
   }
 
-  addNote(String value) {
-    var note = Note(
-      dateCreated: DateTime.now(),
-      value: value,
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
-    );
-
+  addNote(Note note) {
     notesRepository.add(note);
+    getNotes();
+  }
 
+  updateNote(Note note) {
+    notesRepository.update(note);
     getNotes();
   }
 
@@ -81,6 +80,20 @@ class _NotesScreenState extends State<NotesScreen> {
                   removeNote(item);
                 },
                 child: ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdateNotesScreen(
+                          note: item,
+                          onNoteUpdated: (note) {
+                            updateNote(note);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
+                  },
                   leading: const Icon(Icons.note_alt_outlined),
                   title: Text(item.value),
                   subtitle: Text(
@@ -97,8 +110,8 @@ class _NotesScreenState extends State<NotesScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => AddNotesScreen(
-                onNoteAdded: (value) {
-                  addNote(value);
+                onNoteAdded: (note) {
+                  addNote(note);
                   Navigator.pop(context);
                 },
               ),

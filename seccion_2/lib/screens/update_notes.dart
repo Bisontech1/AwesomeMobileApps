@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:seccion_2/models/notes.dart';
 
-class AddNotesScreen extends StatefulWidget {
-  final Function(Note note) onNoteAdded;
+class UpdateNotesScreen extends StatefulWidget {
+  final Note note;
+  final Function(Note note) onNoteUpdated;
 
-  const AddNotesScreen({
+  const UpdateNotesScreen({
     super.key,
-    required this.onNoteAdded,
+    required this.note,
+    required this.onNoteUpdated,
   });
 
   @override
-  State<AddNotesScreen> createState() => _AddNotesScreenState();
+  State<UpdateNotesScreen> createState() => _UpdateNotesScreenState();
 }
 
-class _AddNotesScreenState extends State<AddNotesScreen> {
-  String? value;
+class _UpdateNotesScreenState extends State<UpdateNotesScreen> {
+  final TextEditingController inputController = TextEditingController();
+  late Note note;
+
+  @override
+  void initState() {
+    super.initState();
+    note = widget.note;
+    inputController.value = TextEditingValue(text: note.value);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Añadir nota"),
+        title: const Text("Actualizar nota"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -29,12 +39,13 @@ class _AddNotesScreenState extends State<AddNotesScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
+              controller: inputController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "Nota",
               ),
               onChanged: (value) {
-                this.value = value;
+                note.value = value;
               },
             ),
             const SizedBox(
@@ -42,15 +53,9 @@ class _AddNotesScreenState extends State<AddNotesScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (value == null) return;
-                final dateCreated = DateTime.now();
-                widget.onNoteAdded(Note(
-                  id: dateCreated.millisecondsSinceEpoch.toString(),
-                  value: value!,
-                  dateCreated: dateCreated,
-                ));
+                widget.onNoteUpdated(note);
               },
-              child: Text("Agregar Nota"),
+              child: Text("Actualizar Nota"),
             )
           ],
         ),

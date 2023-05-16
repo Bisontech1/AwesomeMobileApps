@@ -1,23 +1,26 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:seccion_2/models/notes.dart';
 
 class NotesRepository {
-  final List<Note> _notes = [];
+  late Box<Note> _notesBox;
 
-  List<Note> get notes => _notes;
+  List<Note> get notes => _notesBox.values.toList();
 
   NotesRepository();
 
+  init() async {
+    _notesBox = await Hive.openBox<Note>("notes");
+  }
+
   add(Note note) {
-    _notes.add(note);
+    _notesBox.put(note.id, note);
   }
 
   delete(Note note) {
-    _notes.removeWhere((element) => element.id == note.id);
+    _notesBox.delete(note.id);
   }
 
   update(Note note) {
-    var index = _notes.indexWhere((element) => element.id == note.id);
-    if (index == -1) return;
-    _notes[index] = note;
+    _notesBox.put(note.id, note);
   }
 }

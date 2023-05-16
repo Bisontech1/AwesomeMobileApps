@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seccion_3/di/container.dart';
 import 'package:seccion_3/models/notes.dart';
 import 'package:seccion_3/repositories/notes_repository.dart';
 import 'package:seccion_3/screens/add_notes.dart';
+import 'package:seccion_3/screens/auth_screen.dart';
 import 'package:seccion_3/screens/update_notes.dart';
+import 'package:seccion_3/services/auth_service.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({super.key});
@@ -15,7 +18,10 @@ class NotesScreen extends StatefulWidget {
 class _NotesScreenState extends State<NotesScreen> {
   var isLoading = true;
   final NotesRepository notesRepository = DIContainer.instance.notesRepository;
+  final AuthService authService = DIContainer.instance.authService;
   List<Note> notes = [];
+
+  User? currentUser;
 
   @override
   void initState() {
@@ -26,6 +32,7 @@ class _NotesScreenState extends State<NotesScreen> {
   init() async {
     await notesRepository.init();
     getNotes();
+    updateUser();
     isLoading = false;
   }
 
@@ -50,12 +57,45 @@ class _NotesScreenState extends State<NotesScreen> {
     getNotes();
   }
 
+  updateUser() {
+    setState(() {
+      currentUser = authService.currentUser;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Notas"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AuthScreen(
+                    notesLoaded: () {
+                      getNotes();
+                    },
+                    signInChanged: () {
+                      updateUser();
+                    },
+                  ),
+                ),
+              );
+            },
+            icon: currentUser == null
+                ? const Icon(Icons.person_outline)
+                : CircleAvatar(
+                  radius: 15,
+                    child: ClipOval(
+                      child: Image.network(currentUser?.photoURL ?? ""),
+                    ),
+                  ),
+          )
+        ],
       ),
       body: Builder(
         builder: (context) {

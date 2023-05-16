@@ -28,7 +28,7 @@ class FirebaseDatabaseService {
       {
         "id": note.id,
         "value": note.value,
-        "dateCreated": note.dateCreated.toUtc(),
+        "dateCreated": note.dateCreated.toString(),
       },
     );
   }

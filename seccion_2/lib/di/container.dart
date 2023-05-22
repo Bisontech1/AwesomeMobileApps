@@ -5,7 +5,6 @@ class DIContainer {
 
   DIContainer._private();
 
-  static final DIContainer _instance = DIContainer._private();
+  static DIContainer instance = DIContainer._private();
 
-  static DIContainer get instance => _instance;
 }

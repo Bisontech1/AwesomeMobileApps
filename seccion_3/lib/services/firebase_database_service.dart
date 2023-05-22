@@ -3,18 +3,16 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:seccion_3/models/notes.dart';
 
 class FirebaseDatabaseService {
-  FirebaseDatabase db;
+  FirebaseDatabase db = FirebaseDatabase.instance;
 
-  late DatabaseReference _ref;
+  late DatabaseReference ref;
 
-  FirebaseDatabaseService({
-    required this.db,
-  }) {
-    _ref = db.ref("notes");
+  FirebaseDatabaseService() {
+    ref = db.ref("notes");
   }
 
   add(String userId, Note note) async {
-    await _ref.child(userId).child(note.id).set(
+    await ref.child(userId).child(note.id).set(
       {
         "id": note.id,
         "value": note.value,
@@ -24,7 +22,7 @@ class FirebaseDatabaseService {
   }
 
   update(String userId, Note note) async {
-    await _ref.child(userId).child(note.id).set(
+    await ref.child(userId).child(note.id).set(
       {
         "id": note.id,
         "value": note.value,
@@ -33,18 +31,19 @@ class FirebaseDatabaseService {
     );
   }
 
-  remove(String userId, Note note) async {
-    await _ref.child(userId).child(note.id).remove();
+  delete(String userId, Note note) async {
+    await ref.child(userId).child(note.id).remove();
   }
 
   Future<List<Note>?> get(String userId) async {
-    var result = await _ref.child(userId).get();
-    return result.children.map((e) {
-      var map = e.value as Map;
+    final result = await ref.child(userId).get();
+    return result.children.map((element) {
+      final map = element.value as Map;
+
       return Note(
         id: map["id"],
-        value: map["value"],
         dateCreated: DateTime.parse(map["dateCreated"]),
+        value: map["value"],
       );
     }).toList();
   }

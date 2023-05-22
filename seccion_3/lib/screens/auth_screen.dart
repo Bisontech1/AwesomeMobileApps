@@ -74,7 +74,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   saveNotes(BuildContext context) async {
-    await _notesRepository.saveNotesToCloud();
+    await _notesRepository.saveCloudNotes();
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

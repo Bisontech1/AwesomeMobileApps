@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthService {
-  final FirebaseAuth auth;
-  final GoogleSignIn googleSignIn;
 
-  AuthService({required this.auth, required this.googleSignIn});
+class AuthService {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  GoogleSignIn googleSignIn = GoogleSignIn();
 
   bool get isSignedIn => auth.currentUser != null;
   User? get currentUser => auth.currentUser;

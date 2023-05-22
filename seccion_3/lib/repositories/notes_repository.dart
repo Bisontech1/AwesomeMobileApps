@@ -4,9 +4,9 @@ import 'package:seccion_3/services/auth_service.dart';
 import 'package:seccion_3/services/firebase_database_service.dart';
 
 class NotesRepository {
-  late Box<Note> _notesBox;
+  late Box<Note> notesBox;
 
-  List<Note> get notes => _notesBox.values.toList();
+  List<Note> get notes => notesBox.values.toList();
 
   AuthService authService;
   FirebaseDatabaseService firebaseDatabaseService;
@@ -17,7 +17,7 @@ class NotesRepository {
   });
 
   init() async {
-    _notesBox = await Hive.openBox<Note>("notes");
+    notesBox = await Hive.openBox("notes");
   }
 
   loadCloudNotes() async {
@@ -31,7 +31,7 @@ class NotesRepository {
     }
   }
 
-  saveNotesToCloud() async {
+  saveCloudNotes() async {
     if (!authService.isSignedIn) return;
 
     for (var note in notes) {
@@ -40,25 +40,24 @@ class NotesRepository {
   }
 
   add(Note note) async {
-    await _notesBox.put(note.id, note);
+    await notesBox.put(note.id, note);
 
     if (authService.isSignedIn) {
       await firebaseDatabaseService.add(authService.currentUser!.uid, note);
     }
-
   }
 
   delete(Note note) async {
-    await _notesBox.delete(note.id);
+    await notesBox.delete(note.id);
 
     if (authService.isSignedIn) {
-      await firebaseDatabaseService.remove(authService.currentUser!.uid, note);
+      await firebaseDatabaseService.delete(authService.currentUser!.uid, note);
     }
   }
 
   update(Note note) async {
-    await _notesBox.put(note.id, note);
-    
+    await notesBox.put(note.id, note);
+
     if (authService.isSignedIn) {
       await firebaseDatabaseService.update(authService.currentUser!.uid, note);
     }

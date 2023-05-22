@@ -15,9 +15,9 @@ Aquí encontrarán el código de cada una de las 3 secciones presentadas en el w
 
 ### Secciones
 
-- [Sección 1: Introducción a Flutter](https://github.com/Bisontech1/AwesomeMobileApps/tree/master/seccion1)
-- [Sección 2: Conexión a una base de datos](https://github.com/Bisontech1/AwesomeMobileApps/tree/master/seccion2)
-- [Sección 3: Firebase](https://github.com/Bisontech1/AwesomeMobileApps/tree/master/seccion3)
+- [Sección 1: Introducción a Flutter](https://github.com/Bisontech1/AwesomeMobileApps/tree/master/seccion_1)
+- [Sección 2: Conexión a una base de datos](https://github.com/Bisontech1/AwesomeMobileApps/tree/master/seccion_2)
+- [Sección 3: Firebase](https://github.com/Bisontech1/AwesomeMobileApps/tree/master/seccion_3)
 
 
 ## Contacto

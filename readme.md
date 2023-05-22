@@ -8,7 +8,7 @@
 
 ## Acerca de
 
-¡Bienvenidos al repositorio de workshop Awesome Mobile Apps de TigreHacks!
+¡Bienvenidos al repositorio del workshop Awesome Mobile Apps de TigreHacks!
 
 Aquí encontrarán el código de cada una de las 3 secciones presentadas en el workshop.
 
